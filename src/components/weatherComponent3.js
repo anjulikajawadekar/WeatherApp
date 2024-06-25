@@ -27,7 +27,6 @@ function WeatherComponent3() {
                 params: { lat, lon, units: 'metric', appid: api_key },
             });
             setWeather({ data: res.data, loading: false, error: false });
-            console.log("hello");
             console.log(res.data);
         } catch (error) {
             setWeather({ ...weather, data: {}, error: true });
@@ -38,10 +37,16 @@ function WeatherComponent3() {
     const fetchDailyWeatherData = async (lat, lon) => {
         setDailyWeather({ ...dailyWeather, loading: true });
         try {
-            const res = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
-                params: { lat, lon, units: 'metric', appid: api_key },
-            });
-            setDailyWeather({ current: res.data.current, daily: res.data.daily, loading: false, error: false });
+            if(!weather.error){
+                const res = await axios.get('https://api.openweathermap.org/data/2.5/onecall', {
+                    params: { lat, lon, units: 'metric', appid: api_key },
+                });
+                setDailyWeather({ current: res.data.current, daily: res.data.daily, loading: false, error: false });
+            }
+            else{
+                setDailyWeather({ ...dailyWeather, loading: false, error: true });
+            }
+               
         } catch (error) {
             setDailyWeather({ ...dailyWeather, loading: false, error: true });
             console.error('Error fetching daily weather data', error);
@@ -53,10 +58,8 @@ function WeatherComponent3() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
-                console.log("hello: " + { latitude, longitude });
                 getWeatherByCoordinates(latitude, longitude);
                 fetchDailyWeatherData(latitude, longitude);
-                console.log("hello: " + { latitude, longitude });
             },
             (error) => {
                 console.error('Error getting location', error);
@@ -85,34 +88,6 @@ function WeatherComponent3() {
         }
     };
 
-    // const search = async (event) => {
-    // 	if (event.key === 'Enter') {
-    // 		event.preventDefault();
-    // 		setInput('');
-    // 		setWeather({ ...weather, loading: true });
-    // 		const url = 'https://api.openweathermap.org/data/2.5/weather';
-    // 		const api_key = 'f00c38e0279b7bc85480c3fe775d518c';
-    // 		await axios
-    // 			.get(url, {
-    // 				params: {
-    // 					q: input,
-    // 					units: 'metric',
-    // 					appid: api_key,
-    // 				},
-    // 			})
-    // 			.then((res) => {
-    // 				console.log('res', res);
-    // 				setWeather({ data: res.data, loading: false, error: false });
-    // 			})
-    // 			.catch((error) => {
-    // 				setWeather({ ...weather, data: {}, error: true });
-    // 				setInput('');
-    // 				console.log('error', error);
-    // 			});
-    // 	}
-    // };
-
-
     return (
         <div className="App" style={{ backgroundImage: `url(${img1})` }}>
             <div className='App-content'>
@@ -121,7 +96,7 @@ function WeatherComponent3() {
                     <input
                         type="text"
                         className="city-search"
-                        placeholder="Search City Name.."
+                        placeholder="Search by City Name.."
                         value={input}
                         onChange={(event) => setInput(event.target.value)}
                         onKeyPress={search}
@@ -133,7 +108,13 @@ function WeatherComponent3() {
                     <>
                         <br />
                         <br />
-                        <Oval type="Oval" color="black" height={100} width={100} />
+                        <div className="spinner-container" style={{
+                            alignItems:"center", display:'flex',
+                            justifyContent:"center", 
+                            }}
+                            >
+                        <Oval type="Oval" color="gray" height={50} width={50} />
+                    </div>
                     </>
                 )}
                 {weather.error && (
@@ -142,7 +123,7 @@ function WeatherComponent3() {
                         <br />
                         <span className="error-message">
                             <FontAwesomeIcon icon={faFrown} />
-                            <span style={{ fontSize: '20px' }}>City not found</span>
+                            <span style={{ fontSize: '20px' }}>  City not found</span>
                         </span>
                     </>
                 )}
@@ -235,7 +216,8 @@ function WeatherComponent3() {
                 <hr />
                 <div className="container">
                     <div className="row App-content">
-                        {!dailyWeather.loading && !dailyWeather.error && dailyWeather.daily.length > 0 && (
+                        {!weather.error && !dailyWeather.loading && !dailyWeather.error && dailyWeather.daily.length > 0 && (
+                        
                             <>
                                 <div className="col-6 App-content" style={{ width: '50%' }}>
                                     <ChartComponent className="" daily={dailyWeather.daily} />

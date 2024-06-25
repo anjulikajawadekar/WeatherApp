@@ -36,9 +36,17 @@ function ChartComponent({ daily }) {
     };
 
     return (
-        // <div >
+         <div >
             <Line data={data} options={options} />
-        // </div>
+            <div>
+                <br/>
+                <ul style={{textAlign:"left", color:"GrayText", fontSize:"14px"}}>
+                    <li>Plan your irrigation based on the upcoming rain forecasts.</li>
+                    <li>Check the weekly weather to plan your trip and pack accordingly.</li>
+                    <li>Ensure to have a backup plan for outdoor events considering the weather forecast.</li>
+                </ul>
+            </div>
+        </div>
     );
 }
 

@@ -61,16 +61,11 @@ html {
 .App {
 	display: flex;
 	flex-direction: column;
-	/* justify-content: center;
-	align-items: center;
-	width: 600px;
-	min-height: 440px; */
 	width: 100%;
 	min-height: 610px;
 	height: 100%;
 	background-color: rgb(216, 231, 252);
 	text-align: center;
-	/* margin: 12px auto; */
 	border-radius: 10px;
 	padding-bottom: 32px;
 	padding: 2%;
@@ -80,9 +75,8 @@ html {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    position: relative;
-    /* min-height: 100vh; */
-    color: #fff; /* Ensure text is readable */
+    position: relative;  
+    color: #fff;
 }
 
 .App::before {
